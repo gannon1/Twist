@@ -20,16 +20,18 @@ exports.register_get = function(req, res, next){
         .sort({name: "asc"})
         .then(function(topics){
           res.render('register', {schools, topics})
+          var ryan = new Date;
+          console.log(ryan);
         })
       })
   }
 
 // Register Create Student Post
 exports.register_post = [
+
   // Validate fields.
   body('firstName', 'Please enter your First Name.').isLength({ min: 1 }).trim(),
   body('lastName', 'Please enter your Last Name.').isLength({ min: 1 }).trim(),
-  body('address', 'Please enter your Address.').isLength({ min: 1 }).trim(),
 	body('school', 'Please select your School').isLength({ min: 1 }).trim(),
 	body('email', 'Please enter your E-Mail.').isLength({ min: 1 }).trim(),
 	body('phone', 'Please enter your Phone Number.').isLength({ min: 1 }).trim(),
@@ -44,6 +46,30 @@ exports.register_post = [
   sanitizeBody('lastName').trim().escape(),
   sanitizeBody('address').trim().escape(),
   sanitizeBody('email').trim().escape(),
-  sanitizeBody('phone').trim().escape()
+  sanitizeBody('phone').trim().escape(),
+
+  function registerStudent(req, res, next){
+
+
+    //const errors = validationResult(req);
+
+    var student_register = new Student({
+      lastName: req.body.lastName,
+      firstName: req.body.firstName,
+      school: req.body.school,
+      email: req.body.email,
+      timeStamp: new Date,
+      choice1: req.body.choice1,
+      choice2: req.body.choice2,
+      choice3: req.body.choice3,
+      choice4: req.body.choice4,
+      choice5: req.body.choice5,
+    })
+
+    Student.create(student_register)
+    .then(function(student){
+      res.render('success', student_register);
+    })
+  }
   
 ]
